@@ -1,0 +1,8 @@
+title: Introduction To DTrace
+
+theme: neon # default/neon/beige
+transition: linear # default/cube/page/concave/linear(2d)
+
+slides:
+  - 1-intro.md
+  - 2-intro.md

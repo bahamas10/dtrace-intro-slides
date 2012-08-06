@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>{{ site.title }}</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+
+		<link rel="stylesheet" href="/reveal.js/css/reset.css">
+		<link rel="stylesheet" href="/reveal.js/css/main.css">
+		<link rel="stylesheet" href="/reveal.js/css/print.css" type="text/css" media="print">
+
+		<link rel="stylesheet" href="/reveal.js/lib/css/zenburn.css">
+
+		<link rel="stylesheet" href="/style.css">
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			{{ content }}
+
+			<!-- The navigational controls UI -->
+			<aside class="controls">
+				<a class="left" href="#">&#x25C4;</a>
+				<a class="right" href="#">&#x25BA;</a>
+				<a class="up" href="#">&#x25B2;</a>
+				<a class="down" href="#">&#x25BC;</a>
+			</aside>
+
+			<!-- Presentation progress bar -->
+			<div class="progress"><span></span></div>
+
+		</div>
+
+		<script src="reveal.js/lib/js/head.min.js"></script>
+
+		<script>
+			// Scripts that should be loaded before initializing
+			var scripts = [];
+
+			// If the browser doesn't support classList, load a polyfill
+			if( !document.body.classList ) {
+				scripts.push( 'reveal.js/lib/js/classList.js' );
+			}
+
+			// Load markdown parser if there are slides defined using markdown
+			if( document.querySelector( '[data-markdown]' ) ) {
+				scripts.push( 'reveal.js/lib/js/showdown.js' );
+				scripts.push( 'reveal.js/lib/js/data-markdown.js' );
+			}
+
+			// If we're runnning the notes server we need to include some additional JS
+			// TODO Is there a better way to determine if we're running the notes server?
+			if( window.location.host === 'localhost:1947' ) {
+				scripts.push( 'reveal.js/socket.io/socket.io.js' );
+				scripts.push( 'reveal.js/plugin/speakernotes/client.js' );
+			}
+
+			scripts.push( 'reveal.js/js/reveal.js' );
+
+			// Load the scripts and, when completed, initialize reveal.js
+			head.js.apply( null, scripts.concat([function() {
+
+				// Fires each time a new slide is activated
+				Reveal.addEventListener( 'slidechanged', function( event ) {
+					// event.previousSlide, event.currentSlide, event.indexh, event.indexv
+				} );
+
+				// Full list of configuration options available here:
+				// https://github.com/hakimel/reveal.js#configuration
+				Reveal.initialize({
+					controls: true,
+					progress: true,
+					history: true,
+
+					theme: Reveal.getQueryHash().theme || '{{ site.theme }}', // default/neon/beige
+					transition: Reveal.getQueryHash().transition || '{{ site.transition }}' // default/cube/page/concave/linear(2d)
+				});
+
+			}]));
+
+			// Load highlight.js for syntax highlighting of code samples
+			head.js( 'reveal.js/lib/js/highlight.js', function() {
+				hljs.initHighlightingOnLoad();
+			} );
+		</script>
+
+	</body>
+</html>

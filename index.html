@@ -1,0 +1,10 @@
+---
+layout: default
+---
+<div class="slides">
+	{% loop_directory directory:_includes iterator:slide_file filter:* %}
+	<section data-markdown>
+		{% include slide_file %}
+	</section>
+	{% endloop_directory %}
+</div>
