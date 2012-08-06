@@ -27,10 +27,238 @@
 			<div class="slides">
 	
 	<section data-markdown>
+		DTrace
+======
+
+<blockquote>
+DTrace  is a comprehensive dynamic tracing framework for the Solaris Operating System. DTrace provides a powerful infrastructure that permits administrators, developers, and
+service personnel to concisely answer arbitrary questions about the behavior of the operating system and user programs.
+</blockquote>
+
+*An Introduction*
+
+Presentation by [Dave Eddy][0] and [Mike Zeller][1]
+
+[0]: http://www.daveeddy.com
+[1]: http://lightsandshapes.com
+
+	</section>
+	
+	<section data-markdown>
 		Title
 =====
 
 testing github
+
+	</section>
+	
+	<section data-markdown>
+		DTrace is like Node.js
+======================
+
+Really, it is, I promise
+
+<p class="fragment">...well, the concepts are</p>
+
+---
+
+<p class="fragment">If you understand the event-driven concepts in Node.js, you can understand DTrace</p>
+
+	</section>
+	
+	<section data-markdown>
+		Node.js is hard
+===============
+
+    var http=require('http'),util=require('util');http.createServer(function(req,res){console.log('incoming.');res.end(JSON.stringify({'message':'OK','url':util.format('is %s',req.url)}));}).listen(80,'0.0.0.0');
+
+---
+
+If you know Node.js, you can tell what this is doing...
+
+
+but if you don't... forget about it
+
+	</section>
+	
+	<section data-markdown>
+		Node.js is <s>hard</s> easy
+===========================
+
+    var http = require('http'),
+        util = require('util');
+
+    http.createServer(function(req,res) {
+      console.log('incoming.');
+      res.end(JSON.stringify(
+      {
+        'message': 'OK',
+        'url':     util.format('is %s', req.url)
+      }
+      ));
+    }).listen(80,'0.0.0.0');
+
+---
+
+Now you can start to make sense of this...
+
+	</section>
+	
+	<section data-markdown>
+		DTrace is hard
+===============
+
+    syscall::write:entry{self->ts=timestamp;}syscall::write:return/self->ts/{this->lat=timestamp-self->ts;trace(this->lat);self->ts=0;}
+
+---
+
+If you know DTrace, you recognize this as a simple invocation
+
+
+but if you don't... it's as hard to read as Node.js
+
+	</section>
+	
+	<section data-markdown>
+		DTrace is <s>hard</s> easy
+==========================
+
+    syscall::write:entry
+    {
+        self->ts = timestamp;
+    }
+
+    syscall::write:return
+    /self->ts/
+    {
+        this->lat = timestamp - self->ts;
+        trace(this->lat);
+        self->ts=0;
+    }
+
+---
+
+It's not so bad
+
+	</section>
+	
+	<section data-markdown>
+		Concepts in Node
+================
+
+    syscall.on('open', function(pid, execname) {
+      if (execname === 'bash') {
+        console.log('Open syscall fired by pid %d', pid);
+      }
+    });
+
+---
+
+This is what a DTrace script would look like in node...
+
+	</section>
+	
+	<section data-markdown>
+		Concepts in DTrace
+==================
+
+    syscall::open:entry
+    /execname == "bash"/
+    {
+        printf("Open syscall fired by pid %d\n", pid);
+    }
+
+---
+
+And this is what it looks like in DTrace
+
+	</section>
+	
+	<section data-markdown>
+		Concepts in DTrace
+==================
+
+    syscall::open:entry                                 | Probe
+    /execname == "bash"/                                | Predicate
+    {                                                   | Actions
+        printf("Open syscall fired by pid %d\n", pid);  | Actions
+    }                                                   | Actions
+
+---
+
+Fields explained
+
+* Probe is the event to hook into
+* Predicate is a conditional to test before running any `Actions`
+* Actions are code to execute when an event is matched
+
+	</section>
+	
+	<section data-markdown>
+		DTrace Probes
+=============
+
+List all probes available on your system with `dtrace -l`
+
+---
+
+	</section>
+	
+	<section data-markdown>
+		DTrace Probes
+=============
+
+OpenIndiana
+
+<pre><code> dave @ [ datadyne :: (SunOS) ] ~ $ sudo dtrace -l | wc -l
+       76914
+</code></pre>
+
+
+Joyent SmartMachine Zone
+
+<pre><code> dave @ [ dave-01 :: (SunOS) ] ~ $ sudo dtrace -l | wc -l
+       489
+</code></pre>
+
+
+Mac OS X 10.7
+
+<pre><code> dave @ [ bahamas10 :: (Darwin) ] ~ $ sudo dtrace -l | wc -l
+      219985
+</code></pre>
+
+
+Linux Ubuntu 12.04
+
+<pre><code> dave @ [ vicviper :: (Linux) ] ~ $ sudo dtrace -l
+    sudo: dtrace: command not found
+</code></pre>
+
+
+	</section>
+	
+	<section data-markdown>
+		DTrace
+======
+
+Bonus Material
+--------------
+
+* [Realtime DTrace Latency visualization with GnuPlot][0]
+* [Node.js DTrace static probes][3]
+
+<br />
+
+Live Demo
+---------
+
+Presentation by [Dave Eddy][1] and [Mike Zeller][2]
+
+[0]: http://www.youtube.com/watch?v=PnvszdcUgJc
+[1]: http://www.daveeddy.com/
+[2]: http://lightsandshapes.com/
+[3]: https://github.com/bahamas10/node-dtrace-examples
 
 	</section>
 	
